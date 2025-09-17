@@ -5,8 +5,6 @@ import ttkbootstrap as ttk
 
 # Cria a janela principal com o tema \*darkly\*
 satisfaction = ttk.Window(themename="darkly")
-# Define o tamanho da janela: 800 pixels de largura e 650 pixels de altura
-satisfaction.geometry("800x650")
 # Define o título da janela que aparecerá na barra de título
 satisfaction.title("Review User")
 
@@ -20,6 +18,10 @@ frame_feedback = ttk.Frame(satisfaction)
 # Posiciona o frame_feedback na mesma posição que o frame_review para facilitar a troca de telas
 frame_feedback.grid(row=0, column=0, sticky="nsew")
 
+frame_thanks = ttk.Frame(satisfaction)
+
+frame_thanks.grid(row=0, column=0, sticky="nsew")
+
 # Função \*show_frame\* que recebe um frame e chama o método tkraise() para mostrá-lo na tela
 def show_frame(frame):
     frame.tkraise()  # Traz o \*frame\* para o topo, tornando-o visível
@@ -27,6 +29,9 @@ def show_frame(frame):
 # Função \*change_window\* que troca a tela para o frame_feedback, chamando show_frame
 def change_window():
     show_frame(frame_feedback)
+
+def thanks_window():
+    show_frame(frame_thanks)
 
 # Cria um objeto Style para personalizar o estilo dos widgets
 style = ttk.Style()
@@ -46,7 +51,8 @@ great_review = ttk.Button(
     text="😃      Great",           # Texto exibido no botão
     bootstyle="success",            # Aplica o estilo \*success\* definido pelo ttkbootstrap
     width=50,                       # Define a largura do botão
-    padding=20                      # Define o espaçamento interno do botão (padding)
+    padding=20,                     # Define o espaçamento interno do botão (padding)
+    command=thanks_window           # Associa a ação de mudar a tela ao clicar no botão
 )
 # Posiciona o botão garantindo um espaçamento vertical de 10 pixels
 great_review.pack(pady=10)
@@ -97,7 +103,7 @@ feedback_label = ttk.Label(frame_feedback, text="O que pode melhorar?", font=("H
 # Posiciona o rótulo com um espaçamento vertical de 20 pixels
 feedback_label.pack(pady=20)
 
-# Cria uma caixa de texto onde o usuário pode inserir seu feedback
+# Cria uma caixa de texto onde o usuário pode inserir o seu feedback
 text_feedback = tk.Text(frame_feedback, width=50, height=10)
 # Posiciona a caixa de texto com um espaçamento vertical de 10 pixels
 text_feedback.pack(pady=10)
@@ -113,6 +119,35 @@ back_button = ttk.Button(
     command=lambda: show_frame(frame_review)
 )
 back_button.pack(pady=10)
+
+# ==================== Conteúdo do \*frame_thanks\* ====================
+# Cria um rótulo de agradecimento
+thanks_label = ttk.Label(frame_thanks, text="Obrigado pela sua avaliação!", font=("Helvetica", 24))
+choice_review_label = ttk.Label(frame_thanks, text="Deseja deixar um elogio para o restaurante ?", font=("Helvetica", 18))
+
+review_button = ttk.Button(
+    frame_thanks,
+    text="Deixar um elogio",
+    bootstyle="info",               # Estilo \*info\*
+    width=50,
+    padding=20,
+    command=change_window          # Associa a ação de mudar a tela ao clicar no botão
+)
+
+out_button = ttk.Button(
+    frame_thanks,
+    text="voltar para tela inicial",
+    bootstyle="warning",               # Estilo \*info\*
+    width=50,
+    padding=20,
+    command=lambda: show_frame(frame_review)          # Associa a ação de mudar a tela ao clicar no botão
+)
+# Posiciona o rótulo com um espaçamento vertical de 20 pixels
+thanks_label.pack(pady=20)
+# Posiciona o rótulo com um espaçamento vertical de 10 pixels
+choice_review_label.pack(pady=25)
+review_button.pack(pady=10)
+out_button.pack(pady=10)
 
 # Inicialmente, exibe o \*frame_review\* para que a tela de avaliação seja a primeira a ser vista
 show_frame(frame_review)
