@@ -8,6 +8,8 @@ satisfaction = ttk.Window(themename="darkly")
 # Define o título da janela que aparecerá na barra de título
 satisfaction.title("Review User")
 
+satisfaction.resizable(False, False)
+
 # Cria o \*frame_review\*, que será a tela inicial onde o usuário escolhe a avaliação
 frame_review = ttk.Frame(satisfaction)
 # Posiciona o frame na linha 0, coluna 0, ocupando todo o espaço disponível (nsew = norte, sul, leste, oeste)
