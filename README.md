@@ -19,7 +19,7 @@ Este projeto é uma aplicação gráfica feita em Python usando as bibliotecas `
 ## Estrutura dos arquivos
 
 - `user_GUI.py`: Interface gráfica para o usuário realizar avaliações.
-- `ADM_GUI.py`: (Descreva aqui a função deste arquivo, se desejar).
+- `ADM_GUI.py`: *Ainda em planejamento*.
 
 ## Imagem de exemplo
 
