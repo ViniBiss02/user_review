@@ -2,6 +2,24 @@
 import tkinter as tk
 # Importa o módulo ttkbootstrap, que melhora os widgets do Tkinter com temas modernos
 import ttkbootstrap as ttk
+import os
+from openpyxl import Workbook
+
+# Caminho da pasta onde procurar o arquivo
+pasta = 'D:/py_train/user_review'
+
+# Nome do arquivo que queremos encontrar ou criar
+nome_arquivo = 'review_usuarios.csv'
+caminho_arquivo = os.path.join(pasta, nome_arquivo)
+
+# Verifica se o arquivo já existe na pasta
+if not os.path.exists(caminho_arquivo):
+    # Se não existir, cria um arquivo Excel
+    wb = Workbook()
+    wb.save(caminho_arquivo)
+    print(f'Arquivo {nome_arquivo} criado.')
+else:
+    print(f'Arquivo {nome_arquivo} já existe.')
 
 # Cria a janela principal com o tema \*darkly\*
 admin = ttk.Window(themename="darkly")

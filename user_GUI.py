@@ -1,7 +1,37 @@
 # Importa o módulo principal do Tkinter para criar interfaces gráficas
+import csv
+import time
 import tkinter as tk
 # Importa o módulo ttkbootstrap, que melhora os widgets do Tkinter com temas modernos
 import ttkbootstrap as ttk
+import os
+from openpyxl import Workbook
+
+# Caminho da pasta onde procurar o arquivo
+pasta = 'D:/py_train/user_review'
+
+# Nome do arquivo que queremos encontrar ou criar
+nome_arquivo = 'review_usuarios.csv'
+caminho_arquivo = os.path.join(pasta, nome_arquivo)
+
+# Verifica se o arquivo já existe na pasta
+if not os.path.exists(caminho_arquivo):
+    # Se não existir, cria um arquivo Excel
+    wb = Workbook()
+    wb.save(caminho_arquivo)
+    print(f'Arquivo {nome_arquivo} criado.')
+else:
+    print(f'Arquivo {nome_arquivo} já existe.')
+
+def salvar_avaliacao(tipo_avaliacao, texto_opiniao):
+    caminho_csv = os.path.join('D:/py_train/user_review', 'review_usuarios.csv')
+    # Se o arquivo não existe, cria com cabeçalho
+    arquivo_existe = os.path.exists(caminho_csv)
+    with open(caminho_csv, mode='a', newline='', encoding='utf-8') as arquivo:
+        writer = csv.writer(arquivo)
+        if not arquivo_existe:
+            writer.writerow(['Avaliacao', 'Opiniao'])
+        writer.writerow([tipo_avaliacao, texto_opiniao])
 
 # Cria a janela principal com o tema \*darkly\*
 satisfaction = ttk.Window(themename="darkly")
@@ -35,6 +65,11 @@ def change_window():
 def thanks_window():
     show_frame(frame_thanks)
 
+def out_window():
+    text_feedback.config(state=tk.DISABLED)
+    time.sleep(3)
+    show_frame(frame_review)
+
 # Cria um objeto Style para personalizar o estilo dos widgets
 style = ttk.Style()
 # Configura um \*estilo customizado\* chamado "Custom.TButton" com a fonte Arial tamanho 20
@@ -42,10 +77,28 @@ style.configure("Custom.TButton", font=("Arial", 20))
 
 # ==================== Conteúdo do \*frame_review\* ====================
 
+def enviar_great():
+    salvar_avaliacao('Great', '')
+    show_frame(frame_thanks)
+
+def enviar_good():
+    texto = text_feedback.get("1.0", "end").strip()
+    salvar_avaliacao('Good', texto)
+    show_frame(frame_review)
+
+def enviar_regular():
+    texto = text_feedback.get("1.0", "end").strip()
+    salvar_avaliacao('Regular', texto)
+    show_frame(frame_review)
+
+def enviar_bad():
+    texto = text_feedback.get("1.0", "end").strip()
+    salvar_avaliacao('Bad', texto)
+    show_frame(frame_review)
+
 # Cria um rótulo (label) com o título da tela de avaliação
 tittle = ttk.Label(frame_review, text="Deixe aqui a sua avaliação!", font=("Helvetica", 34))
 # Posiciona o rótulo com um espaçamento vertical (pady) de 20 pixels
-tittle.pack(pady=20)
 
 # Cria um botão \*Great\* com o estilo \*success\*
 great_review = ttk.Button(
@@ -54,10 +107,9 @@ great_review = ttk.Button(
     bootstyle="success",            # Aplica o estilo \*success\* definido pelo ttkbootstrap
     width=50,                       # Define a largura do botão
     padding=20,                     # Define o espaçamento interno do botão (padding)
-    command=thanks_window           # Associa a ação de mudar a tela ao clicar no botão
+    command=enviar_great          # Associa a ação de mudar a tela ao clicar no botão
 )
 # Posiciona o botão garantindo um espaçamento vertical de 10 pixels
-great_review.pack(pady=10)
 
 # Cria um botão \*Good\* que ao ser clicado chama a função change_window para trocar a tela
 good_review = ttk.Button(
@@ -66,9 +118,8 @@ good_review = ttk.Button(
     bootstyle="info",               # Estilo \*info\*
     width=50,
     padding=20,
-    command=change_window          # Associa a ação de mudar a tela ao clicar no botão
+    command=enviar_good          # Associa a ação de mudar a tela ao clicar no botão
 )
-good_review.pack(pady=10)
 
 # Cria o botão \*Regular\* com estilo \*warning\*, também configurado para trocar a tela
 regular_review = ttk.Button(
@@ -77,19 +128,22 @@ regular_review = ttk.Button(
     bootstyle="warning",            # Estilo \*warning\*
     width=50,
     padding=20,
-    command=change_window
+    command=enviar_regular
 )
-regular_review.pack(pady=10)
 
 # Cria o botão \*Bad\* com o estilo \*danger\* que também chama change_window ao clicar
 bad_review = ttk.Button(
     frame_review,
-    text="😖      Bad",
+    text="😖        Bad",
     bootstyle="danger",             # Estilo \*danger\*
     width=50,
     padding=20,
-    command=change_window
+    command=enviar_bad
 )
+tittle.pack(pady=20)
+great_review.pack(pady=10)
+good_review.pack(pady=10)
+regular_review.pack(pady=10)
 bad_review.pack(pady=10)
 
 # Configuração opcional para definir estilos específicos com fonte tamanho 25 para cada tipo de botão
@@ -109,6 +163,17 @@ feedback_label.pack(pady=20)
 text_feedback = tk.Text(frame_feedback, width=50, height=10)
 # Posiciona a caixa de texto com um espaçamento vertical de 10 pixels
 text_feedback.pack(pady=10)
+
+# Cria o botão \*Enviar\* que ao ser clicado chama a função enviar_good
+send_button = ttk.Button(
+    frame_feedback,
+    text="Enviar",
+    bootstyle="success",           # Estilo \*success\*
+    width=50,
+    padding=20,
+    command=out_window()            # Associa a ação de enviar a avaliação ao clicar no botão
+)
+send_button.pack(pady=10)
 
 # Cria o botão \*Voltar\* que retorna para a tela de avaliação (\*frame_review\*)
 back_button = ttk.Button(
